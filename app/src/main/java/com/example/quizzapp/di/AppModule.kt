@@ -1,8 +1,12 @@
 package com.example.quizzapp.di
 
+import com.example.quizzapp.data.Category
 import com.example.quizzapp.data.Question
+import com.example.quizzapp.domain.HomePageRepository
+import com.example.quizzapp.domain.HomePageRepositoryImpl
 import com.example.quizzapp.domain.QuestionRepository
 import com.example.quizzapp.domain.QuestionRepositoryImpl
+import com.example.quizzapp.model.QuestionDataSource.categories
 import com.example.quizzapp.model.QuestionDataSource.questions
 import dagger.Module
 import dagger.Provides
@@ -19,7 +23,22 @@ class AppModule {
     }
 
     @Provides
-    fun provideQuestionRepository(dataSource: ArrayList<Question>): QuestionRepository {
+    fun provideCategories(): ArrayList<Category> {
+        return categories
+    }
+
+    @Provides
+    fun provideQuestionRepository(
+        dataSource: ArrayList<Question>,
+        categories: ArrayList<Category>
+    ): QuestionRepository {
         return QuestionRepositoryImpl(dataSource)
+    }
+
+    @Provides
+    fun provideHomePageRepository(
+        categories: ArrayList<Category>
+    ): HomePageRepository {
+        return HomePageRepositoryImpl(categories)
     }
 }

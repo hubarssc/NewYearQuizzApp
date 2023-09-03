@@ -1,16 +1,14 @@
 package com.example.quizzapp.ui
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.quizzapp.R
-import com.example.quizzapp.data.Constants.MAX_QUESTIONS
+import com.example.quizzapp.data.Constants.NO_ANSWER_SELECTED
 import com.example.quizzapp.data.Question
 import com.example.quizzapp.databinding.FragmentQuestionBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +32,9 @@ class QuestionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.questionAnswers.setOnCheckedChangeListener { rg, checkedId ->
+            viewModel.updateQuizState(checkedId)
+        }
         setupObservers(view)
         viewModel.getNextQuestion()
     }
@@ -46,12 +47,18 @@ class QuestionFragment : Fragment() {
         }
         viewModel.isLastQuestion.observe(this) { lastQuestion ->
             if (lastQuestion) {
-                binding.nextButton.setOnClickListener {
-                    findNavController().navigate(R.id.action_questionFragment_to_quizResultFragment)
+                with(binding.nextButton) {
+                    text = getString(R.string.finish_text)
+                    setOnClickListener {
+                        findNavController().navigate(R.id.action_questionFragment_to_quizResultFragment)
+                    }
                 }
             } else {
-                binding.nextButton.setOnClickListener {
-                    viewModel.getNextQuestion()
+                with(binding.nextButton) {
+                    text = getString(R.string.next_text)
+                    setOnClickListener {
+                        viewModel.getNextQuestion()
+                    }
                 }
             }
         }
@@ -64,6 +71,13 @@ class QuestionFragment : Fragment() {
                 binding.prevButton.setOnClickListener {
                     viewModel.getPrevQuestion()
                 }
+            }
+        }
+        viewModel.selectedAnswer.observe(this) { selectedRadioButtonId ->
+            if (selectedRadioButtonId != NO_ANSWER_SELECTED) {
+                binding.questionAnswers.check(selectedRadioButtonId)
+            } else {
+                binding.questionAnswers.clearCheck()
             }
         }
     }
