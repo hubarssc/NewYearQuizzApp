@@ -35,6 +35,9 @@
             app:destination="@id/homePageFragment"
             app:popUpTo="@id/homePageFragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="quiz_result"
+            app:argType="com.example.quizzapp.data.QuizResult" />
     </fragment>
 
 </navigation>

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.quizzapp.data.Constants.MAX_QUESTIONS
 import com.example.quizzapp.data.Constants.NO_ANSWER_SELECTED
 import com.example.quizzapp.data.Question
+import com.example.quizzapp.data.QuizResult
 import com.example.quizzapp.domain.QuestionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -47,5 +48,9 @@ class QuestionViewModel @Inject constructor(private val questionRepository: Ques
 
     private fun loadSelectedAnswerForQuestion() {
         selectedAnswer.value = quizState[activeQuestionNumber - 1]
+    }
+
+    fun createQuizResult(): QuizResult {
+        return QuizResult(10, 10)
     }
 }

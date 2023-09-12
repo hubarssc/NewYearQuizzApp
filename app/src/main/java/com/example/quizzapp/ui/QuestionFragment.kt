@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -50,7 +51,8 @@ class QuestionFragment : Fragment() {
                 with(binding.nextButton) {
                     text = getString(R.string.finish_text)
                     setOnClickListener {
-                        findNavController().navigate(R.id.action_questionFragment_to_quizResultFragment)
+                        val bundle = bundleOf("quiz_result" to viewModel.createQuizResult())
+                        findNavController().navigate(R.id.action_questionFragment_to_quizResultFragment, bundle)
                     }
                 }
             } else {

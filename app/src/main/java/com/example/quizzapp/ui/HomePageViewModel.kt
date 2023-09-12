@@ -17,7 +17,6 @@ class HomePageViewModel @Inject constructor(
 
     fun loadCategories() {
         viewModelScope.launch {
-            delay(2_000)
             val data = categoriesRepo.getCategories()
             val mappedData = ArrayList(data.map { it.categoryTitle })
             categories.postValue(mappedData)
