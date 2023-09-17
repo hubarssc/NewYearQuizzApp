@@ -7,7 +7,7 @@ data class Question(
     val option3: String,
     val option4: String,
     val correctAnswer: Int,
-    val categotyId: Int
+    val categoryId: Int
 )
 
 data class Category(

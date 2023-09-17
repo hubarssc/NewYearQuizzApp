@@ -1,7 +1,6 @@
 package com.example.quizzapp.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.quizzapp.R
 import com.example.quizzapp.data.QuizResult
+import com.example.quizzapp.data.orZero
 import com.example.quizzapp.databinding.FragmentQuizResultBinding
 
 
@@ -35,7 +35,7 @@ class QuizResultFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentQuizResultBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -46,14 +46,31 @@ class QuizResultFragment : Fragment() {
         val quizResult = arguments?.getParcelable<QuizResult>("quiz_result")
 
         setupUi(quizResult)
-
-        binding.shareButtin.setOnClickListener {
-            findNavController().navigate(R.id.action_quizResultFragment_to_homePageFragment)
-        }
     }
 
     private fun setupUi(quizResult: QuizResult?) {
-        Log.d("TAG", "Data: $quizResult")
+        binding.quizTextResult.text = "${quizResult?.correctAnswers.orZero()} / ${quizResult?.allAnswers.orZero()}" //TODO
+        binding.quizPercentageImageView.setImageResource(createAppropriateIconResource(quizResult))
+        binding.retryButton.setOnClickListener {
+            findNavController().navigate(R.id.action_quizResultFragment_to_homePageFragment)
+        }
+
+        binding.shareButtin.setOnClickListener {
+
+        }
+    }
+
+    private fun createAppropriateIconResource(quizResult: QuizResult?): Int {
+        val percentageResult =
+            quizResult?.correctAnswers.orZero() / quizResult?.allAnswers.orZero().toDouble() //TODO: refactor to avoid possibility to division by zero
+
+        return if (percentageResult > 0.8) {
+            R.drawable.result_3
+        } else if (percentageResult > 0.5) {
+            R.drawable.result_2
+        } else {
+            R.drawable.result_1
+        }
     }
 
     override fun onDestroyView() {

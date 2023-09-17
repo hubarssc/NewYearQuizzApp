@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,7 +25,7 @@ class QuestionFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentQuestionBinding.inflate(inflater, container, false)
         return binding.root
@@ -34,13 +35,17 @@ class QuestionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.questionAnswers.setOnCheckedChangeListener { rg, checkedId ->
-            viewModel.updateQuizState(checkedId)
+            val radioButton: View? = binding.questionAnswers.findViewById(checkedId)
+            radioButton?.let {
+                viewModel.updateQuizState(binding.questionAnswers.indexOfChild(radioButton))
+            }
         }
-        setupObservers(view)
-        viewModel.getNextQuestion()
+        setupObservers()
+
+        viewModel.startQuizSession()
     }
 
-    private fun setupObservers(view: View) {
+    private fun setupObservers() {
         viewModel.activeQuestion.observe(this) { question ->
             question?.let {
                 setUpUi(question)
@@ -77,7 +82,7 @@ class QuestionFragment : Fragment() {
         }
         viewModel.selectedAnswer.observe(this) { selectedRadioButtonId ->
             if (selectedRadioButtonId != NO_ANSWER_SELECTED) {
-                binding.questionAnswers.check(selectedRadioButtonId)
+                (binding.questionAnswers.getChildAt(selectedRadioButtonId) as RadioButton).isChecked = true
             } else {
                 binding.questionAnswers.clearCheck()
             }

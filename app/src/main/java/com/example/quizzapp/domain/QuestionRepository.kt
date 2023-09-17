@@ -1,7 +1,8 @@
 package com.example.quizzapp.domain
 
+import com.example.quizzapp.data.Category
 import com.example.quizzapp.data.Question
 
 interface QuestionRepository {
-    fun getQuestion(position: Int): Question
+    fun getQuestionsForQuizSession(category: Category): List<Question>
 }

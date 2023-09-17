@@ -2,6 +2,7 @@ package com.example.quizzapp.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.quizzapp.data.Category
 import com.example.quizzapp.data.Constants.MAX_QUESTIONS
 import com.example.quizzapp.data.Constants.NO_ANSWER_SELECTED
 import com.example.quizzapp.data.Question
@@ -19,14 +20,26 @@ class QuestionViewModel @Inject constructor(private val questionRepository: Ques
     var isFirstQuestion: MutableLiveData<Boolean> = MutableLiveData(true)
     val selectedAnswer: MutableLiveData<Int> = MutableLiveData(NO_ANSWER_SELECTED)
 
+    private var questionsForSession:  MutableLiveData<ArrayList<Question>> = MutableLiveData<ArrayList<Question>>()
+
     private var activeQuestionNumber: Int = 0
     private var quizState: Array<Int> = Array(MAX_QUESTIONS) { NO_ANSWER_SELECTED }
+
+    fun startQuizSession(
+        category: Category = Category(
+            id = 0,
+            categoryTitle = "Space"
+        )
+    ) {
+        questionsForSession.value = ArrayList(questionRepository.getQuestionsForQuizSession(category))
+        getNextQuestion()
+    }
 
     fun getNextQuestion() {
         isFirstQuestion.value = activeQuestionNumber == 0
 
         if (activeQuestionNumber < MAX_QUESTIONS) {
-            activeQuestion.value = questionRepository.getQuestion(activeQuestionNumber)
+            activeQuestion.value = questionsForSession.value?.get(activeQuestionNumber)
             activeQuestionNumber++
         }
 
@@ -51,6 +64,19 @@ class QuestionViewModel @Inject constructor(private val questionRepository: Ques
     }
 
     fun createQuizResult(): QuizResult {
-        return QuizResult(10, 10)
+        return QuizResult(calculateCorrectAnswers(), MAX_QUESTIONS)
+    }
+
+    private fun calculateCorrectAnswers(): Int {
+        var correctAnswersAmount = 0
+
+        questionsForSession.value?.let { questions ->
+            for (questionId in questions.indices) {
+                if (questions[questionId].correctAnswer == quizState[questionId]) {
+                    correctAnswersAmount++
+                }
+            }
+        }
+        return correctAnswersAmount
     }
 }
