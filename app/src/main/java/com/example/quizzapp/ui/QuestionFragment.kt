@@ -46,18 +46,21 @@ class QuestionFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.activeQuestion.observe(this) { question ->
+        viewModel.activeQuestion.observe(viewLifecycleOwner) { question ->
             question?.let {
                 setUpUi(question)
             }
         }
-        viewModel.isLastQuestion.observe(this) { lastQuestion ->
+        viewModel.isLastQuestion.observe(viewLifecycleOwner) { lastQuestion ->
             if (lastQuestion) {
                 with(binding.nextButton) {
                     text = getString(R.string.finish_text)
                     setOnClickListener {
                         val bundle = bundleOf("quiz_result" to viewModel.createQuizResult())
-                        findNavController().navigate(R.id.action_questionFragment_to_quizResultFragment, bundle)
+                        findNavController().navigate(
+                            R.id.action_questionFragment_to_quizResultFragment,
+                            bundle
+                        )
                     }
                 }
             } else {
@@ -69,20 +72,24 @@ class QuestionFragment : Fragment() {
                 }
             }
         }
-        viewModel.isFirstQuestion.observe(this) { firstQuestion ->
-            if (firstQuestion) {
-                binding.prevButton.setOnClickListener {
-                    findNavController().popBackStack()
-                }
-            } else {
-                binding.prevButton.setOnClickListener {
+        viewModel.isFirstQuestion.observe(viewLifecycleOwner) { firstQuestion ->
+            binding.prevButton.setOnClickListener {
+                val navController = findNavController()
+                if (firstQuestion) {
+                    // Если это первый вопрос, навигируем на стартовый экран
+                    navController.navigate(R.id.homePageFragment)
+                } else {
+                    // Иначе возвращаемся на предыдущий вопрос
                     viewModel.getPrevQuestion()
                 }
             }
         }
-        viewModel.selectedAnswer.observe(this) { selectedRadioButtonId ->
+
+
+        viewModel.selectedAnswer.observe(viewLifecycleOwner) { selectedRadioButtonId ->
             if (selectedRadioButtonId != NO_ANSWER_SELECTED) {
-                (binding.questionAnswers.getChildAt(selectedRadioButtonId) as RadioButton).isChecked = true
+                (binding.questionAnswers.getChildAt(selectedRadioButtonId) as RadioButton).isChecked =
+                    true
             } else {
                 binding.questionAnswers.clearCheck()
             }
@@ -94,8 +101,8 @@ class QuestionFragment : Fragment() {
             questionText.text = question.questionText
             firstRadioButton.text = question.option1
             secondRadioButton.text = question.option2
-            thurdRadioButton.text = question.option3
-            fouthRadioButton.text = question.option4
+            thirdRadioButton.text = question.option3
+            fourthRadioButton.text = question.option4
         }
     }
 

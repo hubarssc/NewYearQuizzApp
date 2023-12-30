@@ -30,7 +30,6 @@ class AppModule {
     @Provides
     fun provideQuestionRepository(
         dataSource: ArrayList<Question>,
-        categories: ArrayList<Category>
     ): QuestionRepository {
         return QuestionRepositoryImpl(dataSource)
     }

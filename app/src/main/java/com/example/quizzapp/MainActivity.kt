@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.fragments.get(0).childFragmentManager.fragments.find{ it is HomePageFragment} != null
+        if (supportFragmentManager.fragments[0].childFragmentManager.fragments.find{ it is HomePageFragment} != null
             &&
             supportFragmentManager.backStackEntryCount == 0) {
             val dialog = AlertDialog.Builder(this)

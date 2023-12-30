@@ -49,7 +49,7 @@ class QuizResultFragment : Fragment() {
     }
 
     private fun setupUi(quizResult: QuizResult?) {
-        binding.quizTextResult.text = "${quizResult?.correctAnswers.orZero()} / ${quizResult?.allAnswers.orZero()}" //TODO
+        "${quizResult?.correctAnswers.orZero()} / ${quizResult?.allAnswers.orZero()}".also { binding.quizTextResult.text = it } //TODO
         binding.quizPercentageImageView.setImageResource(createAppropriateIconResource(quizResult))
         binding.retryButton.setOnClickListener {
             findNavController().navigate(R.id.action_quizResultFragment_to_homePageFragment)
@@ -65,11 +65,11 @@ class QuizResultFragment : Fragment() {
             quizResult?.correctAnswers.orZero() / quizResult?.allAnswers.orZero().toDouble() //TODO: refactor to avoid possibility to division by zero
 
         return if (percentageResult > 0.8) {
-            R.drawable.result_3
+            R.drawable.result_1
         } else if (percentageResult > 0.5) {
             R.drawable.result_2
         } else {
-            R.drawable.result_1
+            R.drawable.result_3
         }
     }
 

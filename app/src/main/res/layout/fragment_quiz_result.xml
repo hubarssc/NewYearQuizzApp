@@ -5,11 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.HomePageFragment">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/iconbackground"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <!-- Ваши элементы интерфейса и контент -->
+
+    </RelativeLayout>
+
 
     <ImageView
         android:id="@+id/quizPercentageImageView"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_width="308dp"
+        android:layout_height="413dp"
         android:layout_marginHorizontal="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,17 +32,17 @@
         android:id="@+id/quizTextResult"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:textSize="48dp"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:textColor="@color/black"
-        tools:text="9/10"
         android:layout_marginHorizontal="80dp"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="60sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/quizPercentageImageView"
-        />
+        tools:text="9/10" />
 
 
     <Button
